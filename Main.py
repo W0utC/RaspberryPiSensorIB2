@@ -11,7 +11,6 @@ adcTemp = MCP3008(channel=2, max_voltage=3.3)
 adcOrder = [0, 0]
 globalPeopleInside = 0
 checkSent = False
-globalDidRun = False
 
 SUBMIT_URL = "https://studev.groept.be/api/a22ib2b06/insertNewValues/"
 
@@ -166,15 +165,10 @@ def convertToTemp(adcVal):  # function to convert NTC value to temp in °C
     return temp
 
 
-def run_once(didRun):  # a func to initialize the repeated timer for the temp
-    if not didRun:
-        RepeatedTimer(3.0, sentDbNewVal, "ntc", getTemp(), "C")
-        didRun = True
-    return didRun
+RepeatedTimer(3.0, sentDbNewVal, "ntc", getTemp(), "C")
 
 
 while True:
-    globalDidRun = run_once(globalDidRun)
     globalPeopleInside = countPeople(globalPeopleInside)
     logging.info("orderOfPassing: " + str(adcOrder) + "amountOfPeople: " + str(globalPeopleInside))
     # logging.getLogger().setLevel(logging.INFO)
